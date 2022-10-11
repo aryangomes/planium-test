@@ -17,7 +17,7 @@ class BeneficiarioController extends Controller
      */
     public function index()
     {
-        //
+        return response(Beneficiario::recuperarBeneficiarios());
     }
 
     /**
@@ -30,12 +30,20 @@ class BeneficiarioController extends Controller
     {
         $dadosValidados = $request->validated();
 
-        foreach ($dadosValidados as $beneficiario) {
-            Storage::put(
-                'beneficiarios.json',
-                json_encode($beneficiario)
+        $beneficiariosPorPlano = collect($dadosValidados['beneficiarios'])->groupBy('plano');
+
+        $beneficiariosPorPlano->each(function ($beneficiario, $codigoPlano) use ($beneficiariosPorPlano) {
+            $beneficiariosPorPlano[$codigoPlano]->put(
+                'quantidade_beneficiarios',
+                $beneficiariosPorPlano[$codigoPlano]->count()
             );
-        }
+        });
+
+        Storage::put(
+            'beneficiarios.json',
+            json_encode($beneficiariosPorPlano, JSON_PRETTY_PRINT)
+        );
+
         return Storage::get('beneficiarios.json');
     }
 
