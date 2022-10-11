@@ -24,14 +24,14 @@ RUN apt-get update \
     && echo "deb [signed-by=/usr/share/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu jammy main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
     && apt-get update \
     && apt-get install -y php8.1-cli php8.1-dev \
-       php8.1-pgsql php8.1-sqlite3 php8.1-gd \
-       php8.1-curl \
-       php8.1-imap php8.1-mysql php8.1-mbstring \
-       php8.1-xml php8.1-zip php8.1-bcmath php8.1-soap \
-       php8.1-intl php8.1-readline \
-       php8.1-ldap \
-       php8.1-msgpack php8.1-igbinary php8.1-redis php8.1-swoole \
-       php8.1-memcached php8.1-pcov php8.1-xdebug \
+    php8.1-pgsql php8.1-sqlite3 php8.1-gd \
+    php8.1-curl \
+    php8.1-imap php8.1-mysql php8.1-mbstring \
+    php8.1-xml php8.1-zip php8.1-bcmath php8.1-soap \
+    php8.1-intl php8.1-readline \
+    php8.1-ldap \
+    php8.1-msgpack php8.1-igbinary php8.1-redis php8.1-swoole \
+    php8.1-memcached php8.1-pcov php8.1-xdebug \
     && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && curl -sLS https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - \
     && apt-get install -y nodejs \
@@ -44,6 +44,12 @@ RUN apt-get update \
     && apt-get install -y yarn \
     && apt-get install -y mysql-client \
     && apt-get install -y postgresql-client-$POSTGRES_VERSION \
+    && echo "[XDebug]" > /etc/php/8.1/cli/php.ini \
+    && echo "zend_extension="$(find /usr/lib/php/20200930/ -name xdebug.so)" > /etc/php/8.1/cli/php.ini" \
+    && echo "xdebug.mode = debug" >> /etc/php/8.1/cli/php.ini \
+    && echo "xdebug.discover_client_host = true" >> /etc/php/8.1/cli/php.ini \
+    && echo "xdebug.client_host = host.docker.internal" >> /etc/php/8.1/cli/php.ini \
+    && echo "xdebug.client_port = ${XDEBUG_PORT}" >> /etc/php/8.1/cli/php.ini \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
