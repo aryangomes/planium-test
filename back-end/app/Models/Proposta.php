@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Storage;
+
 class Proposta
 {
     private $plano;
@@ -26,5 +28,14 @@ class Proposta
             'nome_plano' => $this->plano->nome,
             'preco' => $this->preco->calcularPrecoPelaIdade($planoPreco),
         ];
+    }
+
+    public static function recuperarPropostas(): ?array
+    {
+        $propostas = json_decode(Storage::get('propostas.json'), true);
+        if ($propostas) {
+            return $propostas;
+        }
+        return [];
     }
 }
