@@ -17,7 +17,7 @@ class BeneficiarioController extends Controller
      */
     public function index()
     {
-        return response(Beneficiario::recuperarBeneficiarios());
+        return response(collect(Beneficiario::recuperarBeneficiarios()));
     }
 
     /**
