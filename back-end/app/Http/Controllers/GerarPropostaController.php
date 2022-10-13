@@ -30,8 +30,10 @@ class GerarPropostaController extends Controller
 
             $beneficiarios->forget('quantidade_beneficiarios');
 
-            foreach ($beneficiarios as  $beneficiario) {
-
+            $beneficiarios->each(function ($beneficiario) use (
+                $propostasDosBeneficiarios,
+                $quantidadeDeBeneficiarios
+            ) {
                 $preco = new Preco($beneficiario->idade);
 
                 $plano = Plano::recuperarPlanoPeloCodigo($beneficiario->plano);
@@ -47,7 +49,7 @@ class GerarPropostaController extends Controller
                         'preco' => $preco->calcularPrecoPelaIdade($planoPreco),
                     ]
                 );
-            }
+            });
         });
 
         $propostasDosBeneficiarios = $propostasDosBeneficiarios->groupBy('registro_plano');
