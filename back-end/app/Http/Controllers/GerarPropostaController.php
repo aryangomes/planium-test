@@ -6,6 +6,7 @@ use App\Models\Beneficiario;
 use App\Models\Plano;
 use App\Models\Preco;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GerarPropostaController extends Controller
 {
@@ -23,29 +24,24 @@ class GerarPropostaController extends Controller
 
         $precos = collect(json_decode(Preco::recuperarPrecos()));
 
-        $planosBeneficiarios = [];
 
-        $planosBeneficiarios = $beneficiariosPorPlano->map(function ($beneficiario, $codigoPlano) use ($precos) {
-            return
-                $precos->where('codigo', $codigoPlano)
-                ->where('minimo_vidas', '<=', $beneficiario->quantidade_beneficiarios)
-                ->last();
-        });
+        $propostasDosBeneficiarios = collect();
 
-        $propostas = collect();
-
-        $beneficiariosPorPlano->each(function ($beneficiarios, $codigoPlano) use ($propostas, $planosBeneficiarios) {
+        $beneficiariosPorPlano->each(function ($beneficiarios) use ($propostasDosBeneficiarios) {
 
             $beneficiarios =  collect($beneficiarios);
+
             $quantidadeDeBeneficiarios = ($beneficiarios->get('quantidade_beneficiarios'));
+
             $beneficiarios->forget('quantidade_beneficiarios');
+
             foreach ($beneficiarios as  $beneficiario) {
 
                 $preco = new Preco($beneficiario->idade);
 
                 $planoPreco = $preco->recuperarPreco($beneficiario->plano, $quantidadeDeBeneficiarios);
 
-                $propostas->add(
+                $propostasDosBeneficiarios->add(
                     [
                         'nome' => $beneficiario->nome,
                         'idade' => $beneficiario->idade,
@@ -55,7 +51,23 @@ class GerarPropostaController extends Controller
                 );
             }
         });
-        // return $propostas;
-        dd($propostas);
+
+        $propostasDosBeneficiarios = $propostasDosBeneficiarios->groupBy('plano');
+
+        $propostasDosBeneficiariosComTotaisDosPlanos = $propostasDosBeneficiarios->each(function ($propostas) {
+            $propostas->put('precoTotalDoPlano', $propostas->sum('preco'));
+        });
+
+        Storage::put(
+            'propostas.json',
+            json_encode(
+                $propostasDosBeneficiariosComTotaisDosPlanos,
+                JSON_PRETTY_PRINT
+            )
+        );
+
+        return Storage::get('propostas.json');
+
+        // dd($propostasDosBeneficiariosComTotaisDosPlanos);
     }
 }
