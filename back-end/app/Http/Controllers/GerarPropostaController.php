@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Beneficiario;
 use App\Models\Plano;
 use App\Models\Preco;
+use App\Models\Proposta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +17,7 @@ class GerarPropostaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function __invoke()
     {
         $beneficiariosPorPlano = collect(Beneficiario::recuperarBeneficiarios());
 
@@ -34,21 +35,10 @@ class GerarPropostaController extends Controller
                 $propostasDosBeneficiarios,
                 $quantidadeDeBeneficiarios
             ) {
-                $preco = new Preco($beneficiario->idade);
 
-                $plano = Plano::recuperarPlanoPeloCodigo($beneficiario->plano);
+                $proposta = new Proposta($beneficiario);
 
-                $planoPreco = $preco->recuperarPreco($beneficiario->plano, $quantidadeDeBeneficiarios);
-
-                $propostasDosBeneficiarios->add(
-                    [
-                        'nome' => $beneficiario->nome,
-                        'idade' => $beneficiario->idade,
-                        'registro_plano' => $plano->registro,
-                        'nome_plano' => $plano->nome,
-                        'preco' => $preco->calcularPrecoPelaIdade($planoPreco),
-                    ]
-                );
+                $propostasDosBeneficiarios->add($proposta->gerarProposta($quantidadeDeBeneficiarios));
             });
         });
 
