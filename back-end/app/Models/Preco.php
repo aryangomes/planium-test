@@ -22,9 +22,9 @@ class Preco extends Model
         $this->definirFaixaDeIdade($idade);
     }
 
-    public static function recuperarPrecos(): string
+    public static function recuperarPrecos(): array
     {
-        return Storage::disk('public')->get(config('arquivos.prices'));
+        return json_decode(Storage::disk('public')->get(config('arquivos.prices')));
     }
 
 
@@ -36,7 +36,7 @@ class Preco extends Model
 
     public function recuperarPreco($codigoPlano, $quantidadeBeneficiarios)
     {
-        $precos = collect(json_decode(self::recuperarPrecos()));
+        $precos = collect(self::recuperarPrecos());
 
         $preco = $precos->where('codigo', $codigoPlano)
             ->where('minimo_vidas', '<=', $quantidadeBeneficiarios)

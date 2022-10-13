@@ -10,8 +10,8 @@ class Beneficiario extends Model
 {
     use HasFactory;
 
-    public static function recuperarBeneficiarios(): string
+    public static function recuperarBeneficiarios(): object
     {
-        return Storage::get('beneficiarios.json');
+        return json_decode(Storage::get('beneficiarios.json'));
     }
 }
