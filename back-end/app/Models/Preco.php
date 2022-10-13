@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class Preco extends Model
+class Preco
 {
-    use HasFactory;
 
     private const  FAIXA_0_A_17_ANOS = 'faixa1';
     private const  FAIXA_18_A_40_ANOS = 'faixa2';
@@ -28,13 +25,14 @@ class Preco extends Model
     }
 
 
-    public function calcularPrecoPelaIdade($preco)
+    public function calcularPrecoPelaIdade($preco): float
     {
         $precoFaixaIdade = $this->faixaDeIdade;
+
         return $preco->$precoFaixaIdade;
     }
 
-    public function recuperarPreco($codigoPlano, $quantidadeBeneficiarios)
+    public function recuperarPreco($codigoPlano, $quantidadeBeneficiarios): object
     {
         $precos = collect(self::recuperarPrecos());
 

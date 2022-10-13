@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class Plano extends Model
+class Plano
 {
-    use HasFactory;
 
     public static function recuperarPlanos(): array
     {

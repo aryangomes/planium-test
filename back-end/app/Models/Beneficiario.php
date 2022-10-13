@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class Beneficiario extends Model
+class Beneficiario
 {
-    use HasFactory;
 
     public static function recuperarBeneficiarios(): object
     {
