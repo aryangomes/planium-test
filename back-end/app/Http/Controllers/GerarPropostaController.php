@@ -18,12 +18,7 @@ class GerarPropostaController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $beneficiariosPorPlano = collect(json_decode(Beneficiario::recuperarBeneficiarios()));
-
-        $planos = collect(json_decode(Plano::recuperarPlanos()));
-
-        $precos = collect(json_decode(Preco::recuperarPrecos()));
-
+        $beneficiariosPorPlano = collect(Beneficiario::recuperarBeneficiarios());
 
         $propostasDosBeneficiarios = collect();
 
@@ -39,20 +34,23 @@ class GerarPropostaController extends Controller
 
                 $preco = new Preco($beneficiario->idade);
 
+                $plano = Plano::recuperarPlanoPeloCodigo($beneficiario->plano);
+
                 $planoPreco = $preco->recuperarPreco($beneficiario->plano, $quantidadeDeBeneficiarios);
 
                 $propostasDosBeneficiarios->add(
                     [
                         'nome' => $beneficiario->nome,
                         'idade' => $beneficiario->idade,
-                        'plano' => $beneficiario->plano,
+                        'registro_plano' => $plano->registro,
+                        'nome_plano' => $plano->nome,
                         'preco' => $preco->calcularPrecoPelaIdade($planoPreco),
                     ]
                 );
             }
         });
 
-        $propostasDosBeneficiarios = $propostasDosBeneficiarios->groupBy('plano');
+        $propostasDosBeneficiarios = $propostasDosBeneficiarios->groupBy('registro_plano');
 
         $propostasDosBeneficiariosComTotaisDosPlanos = $propostasDosBeneficiarios->each(function ($propostas) {
             $propostas->put('precoTotalDoPlano', $propostas->sum('preco'));
@@ -67,7 +65,5 @@ class GerarPropostaController extends Controller
         );
 
         return Storage::get('propostas.json');
-
-        // dd($propostasDosBeneficiariosComTotaisDosPlanos);
     }
 }
