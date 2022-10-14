@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class Propostas extends Component
 {
-    public array $propostas = [];
+    public array $propostasDosBeneficiarios = [];
 
 
     public function listarProposta()

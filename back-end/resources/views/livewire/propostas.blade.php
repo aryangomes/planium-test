@@ -1,12 +1,12 @@
 <div>
 
     <div>
-        @if ($propostas)
+        @if ($propostasDosBeneficiarios)
 
         <h3>Propostas: </h3>
-        @foreach ($propostas as $propostaPlano )
+        @foreach ($propostasDosBeneficiarios as $propostaPorPlano )
         <ol>
-            @foreach ($propostaPlano as $proposta )
+            @foreach ($propostaPorPlano as $proposta )
 
             @if (is_array($proposta))
 
@@ -22,13 +22,13 @@
             @endif
             @endforeach
 
-            <h4>Preço total do Plano : R$ {{ number_format($propostaPlano['precoTotalDoPlano'],2) }} </h4>
+            <h4>Preço total do Plano : R$ {{ number_format($propostaPorPlano['precoTotalDoPlano'],2) }} </h4>
         </ol>
         @endforeach
 
         @else
         <div>
-            <p>Não há propostas geradas! Para gerar as propotas, clique no botão "Gerar Propostas"</p>
+            <p>Não há propostas geradas! Para gerar as propostas, clique no botão "Gerar Propostas"</p>
         </div>
         @endif
 
@@ -45,7 +45,7 @@
     $.get("api/gerarProposta",
     function(data, status){
         let result = JSON.parse(data);
-        @this.propostas = result;
+        @this.propostasDosBeneficiarios = result;
     alert("Propostas geradas com sucesso!");
     }).fail(function(){
     alert("Ocorreu um erro e não foi possível gerar as propostas!");
