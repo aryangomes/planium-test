@@ -1,17 +1,17 @@
 <div>
     <div>
         @if (count($beneficiariosPorPlano)> 0)
-        <ul>
-            <h3>Beneficiários cadastrados: </h3>
+        <h3>Beneficiários cadastrados: </h3>
+        <ul class="list-group">
             @foreach ($beneficiariosPorPlano as $beneficiarios )
             @foreach ($beneficiarios as $beneficiario)
 
             @if (is_object($beneficiario))
-            <li>
+            <li class="list-group-item">
                 <h4>Beneficiário: {{ $beneficiario->nome }}</h4>
-                <ul>
-                    <li><strong>Idade:</strong> {{ $beneficiario->idade }} anos</li>
-                    <li><strong>Plano:</strong> {{ $beneficiario->plano }}</li>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Idade:</strong> {{ $beneficiario->idade }} anos</li>
+                    <li class="list-group-item"><strong>Plano:</strong> {{ $beneficiario->plano }}</li>
                 </ul>
             </li>
             @endif
@@ -20,12 +20,16 @@
             @endforeach
         </ul>
         @else
-        <p>
-            Não há beneficiários cadastrados! Para cadastrar, informes os dados acima e clique no botão "Cadastrar
-            Beneficiário".
-        </p>
+        <div class="alert alert-warning" role="alert">
+            Não há beneficiários cadastrados! Para cadastrar, informes os dados acima e clique no botão
+            <strong>"Cadastrar
+                Beneficiário".</strong>
+        </div>
     </div>
 
     @endif
-    <button wire:click="listarBeneficiarios">Listar Beneficiários</button>
+    <div class="row g-3">
+
+        <button wire:click="listarBeneficiarios" class="btn btn-primary">Listar Beneficiários</button>
+    </div>
 </div>
