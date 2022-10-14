@@ -26,7 +26,7 @@
                 </select>
             </div>
 
-            <button class="btn btn-success" id="cadastrarBeneficiario">Cadastrar</button>
+            <button class="btn btn-success" id="cadastrarBeneficiario">Cadastrar Beneficiário</button>
 
         </div>
     </form>
