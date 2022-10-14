@@ -12,43 +12,14 @@
 </head>
 
 <body>
-
-    <form>
-        <x-beneficiario.forms.input />
-        <button id="cadastrarBeneficiario">Cadastrar</button>
-    </form>
-
-    <livewire:scripts />
-    <livewire:lista-beneficiarios />
-    <livewire:propostas />
+    <div>
+        <livewire:scripts />
+        <livewire:cadastro-beneficiario />
+        <hr>
+        <livewire:lista-beneficiarios />
+        <hr>
+        <livewire:propostas />
+    </div>
+</body>
 
 </html>
-<script>
-    let beneficiarios = [];
-
-    $("#cadastrarBeneficiario").click(function(event){
-      event.preventDefault();
-     let nome = $("#nome").val();
-     let idade = $("#idade").val();
-     let plano = $("#plano").val();
-     let beneficiario = {
-         nome:nome,
-         idade:idade,
-         plano:plano,
-         };
-    beneficiarios.push(beneficiario);
-        $.post("api/beneficiarios",
-        {beneficiarios: beneficiarios},
-        function(data, status){
-        });
-    });
-
-    $("#botaoGerarProposta").click(function(event){
-    event.preventDefault();
-
-    $.get("api/gerarProposta",
-    function(data, status){
-    });
-    });
-
-</script>

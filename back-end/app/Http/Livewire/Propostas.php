@@ -3,8 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Models\Proposta;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
 class Propostas extends Component
