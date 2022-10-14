@@ -25,9 +25,32 @@
             <h4>Preço total do Plano : R$ {{ number_format($propostaPlano['precoTotalDoPlano'],2) }} </h4>
         </ol>
         @endforeach
+
+        @else
+        <div>
+            <p>Não há propostas geradas! Para gerar as propotas, clique no botão "Gerar Propostas"</p>
+        </div>
         @endif
 
-        <button id="botaoGerarProposta">Gerar Propostas</button>
-        <button wire:click="listarProposta">Listar Propostas</button>
+        <div>
+            <button id="botaoGerarProposta">Gerar Propostas</button>
+        </div>
     </div>
 </div>
+
+<script>
+    $("#botaoGerarProposta").click(function(event){
+    event.preventDefault();
+    
+    $.get("api/gerarProposta",
+    function(data, status){
+        let result = JSON.parse(data);
+        @this.propostas = result;
+    alert("Propostas geradas com sucesso!");
+    }).fail(function(){
+    alert("Ocorreu um erro e não foi possível gerar as propostas!");
+    });
+    });
+
+
+</script>
