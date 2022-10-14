@@ -1,2 +1,4 @@
 *
 !.gitignore
+!plans.json
+!prices.json
